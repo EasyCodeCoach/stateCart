@@ -1,5 +1,10 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { items } from "../../data";
+import axios from "axios";
+export const fetchAllProducts = createAsyncThunk("products/all", async () => {
+  const response = await axios("https://fakestoreapi.com/products");
+  return response.data;
+});
 
 export const cartSlice = createSlice({
   name: "cart",
@@ -7,7 +12,7 @@ export const cartSlice = createSlice({
     cartItems: [],
     cartItem: {},
     message: "",
-    products: items,
+    products: [],
   },
   reducers: {
     increaseByQuantity: (state, action) => {
@@ -52,6 +57,11 @@ export const cartSlice = createSlice({
       );
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(fetchAllProducts.fulfilled, (state, action) => {
+      state.products = action.payload;
+    });
+  },
 });
 
 // Action creators are generated for each case reducer function
@@ -60,7 +70,6 @@ export const {
   decreaseByQuantity,
   incrementByAmount,
   removeItem,
-
   addToCart,
 } = cartSlice.actions;
 

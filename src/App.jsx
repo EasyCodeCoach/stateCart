@@ -3,10 +3,12 @@ import Nav from "./components/Nav";
 import Products from "./components/Products";
 import ModalBtn from "./components/ModalBtn";
 import CartItems from "./Cart/CartItems";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
+import { fetchAllProducts } from "./features/Cart/CartSlice";
 function App() {
+  const dispatch = useDispatch();
   const { toggle } = useSelector((state) => state.modal);
   const { message } = useSelector((state) => state.cart);
 
@@ -16,6 +18,9 @@ function App() {
     }
   }, [message]);
 
+  useEffect(() => {
+    dispatch(fetchAllProducts());
+  }, []);
   return (
     <>
       <Nav />
